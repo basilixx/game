@@ -7,20 +7,21 @@ laps = 0
 screen = py.display.set_mode((window_w, window_h))  # initialising screen
 
 class Box:
-    def __init__(self, x, y, w, h):
+    def __init__(self,r,g,b, x, y, w, h):
         self.x = x
         self.y = y
         self.h = h
         self.w = w
+        self.color = (r,g,b)
         self.draw()
+        
     def draw(self):
-        py.draw.rect(screen, (0,0,255), (self.x,self.y,self.w,self.h))
+        py.draw.rect(screen, self.color, (self.x,self.y,self.w,self.h))
+
     def move(self, dir, vel = 2):
         if dir == "d":
             if self.y + self.h < window_h:
                 self.y += vel
-            # else:
-            #     self.y = 0
 
         if dir == "u":
             if self.y > 0:
@@ -39,6 +40,7 @@ class Box:
                 self.x -= vel
             else:
                 self.x = window_w - self.w
+
     def collision(self, box):
        if self.x < box.x + box.w and self.x + self.w > box.x and self.y < box.y + box.h and self.y + self.h > box.y:
         return True
@@ -47,7 +49,7 @@ class Enemy(Box):
     def __init__(self):
         self.color = (255,0,0)
         self.x = random.randrange(1, window_w)
-        self.y = random.randrange(box1.h, window_h-150) 
+        self.y = random.randrange(box1.h, window_h-50) 
         self.h = 10
         self.w = 10
         self.vel = 10
@@ -64,10 +66,10 @@ class Enemy(Box):
         self.w = 0
         self.alive = False
 
-box1 = Box(100,window_h - 90, 90, 90)
+box1 = Box(100, 200,00,00, window_h - 40, 40, 40)
 
 enemy = []
-for i in range(10):
+for i in range(20):
     enemy.append(Enemy())
 
 run = True
@@ -104,10 +106,11 @@ while(run):
         if enemy_box.x == window_w - enemy_box.h:
             enemy_box.kill()
 
-    
     for i in range(len(enemy)):
         if not enemy[i].alive:
             enemy[i] = Enemy()
+            color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
+            enemy[i].color = color
 
     py.display.update()
 
